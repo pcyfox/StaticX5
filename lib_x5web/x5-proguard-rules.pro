@@ -38,6 +38,9 @@
     *;
 }
 
+-keep class  com.silang.superfileview.**{
+    *;
+}
 
 
 # Addidional for x5.sdk classes for apps
