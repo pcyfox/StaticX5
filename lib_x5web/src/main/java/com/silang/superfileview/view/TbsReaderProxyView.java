@@ -138,9 +138,8 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
             return new OpenResult(false, "X5内核加载失败！");
         }
         Log.d(TAG, "displayDocFile() called with: path = [" + path + "]");
-
-        if (TextUtils.isEmpty(path) || !new File(path).exists()) {
-            Log.e(TAG, "文件路径为空！或无法访问 ");
+        if (TextUtils.isEmpty(path) || !new File(path).exists() || !new File(path).canRead()){
+            Log.e(TAG, "文件路径为空,或无法访问!");
             return new OpenResult(false, "文件访问失败！");
         }
         stopDisplay();

@@ -2,6 +2,7 @@ package com.tk.x5test
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
 import android.os.FileUtils
 import android.util.Log
@@ -17,10 +18,23 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        ActivityCompat.requestPermissions(this, arrayOf(WRITE_EXTERNAL_STORAGE), 100)
-
         Log.d(TAG, "onCreate() called with: app dir= ${this.filesDir}")
 
+        if (PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
+                this,
+                WRITE_EXTERNAL_STORAGE
+            )
+        ) {
+            startTest()
+        } else {
+            val ps = arrayOf(WRITE_EXTERNAL_STORAGE);
+            ActivityCompat.requestPermissions(this, ps, 100)
+        }
+    }
+
+
+    private fun startTest() {
+        Log.d(TAG, "startTest() called")
         //File(this.filesDir.absolutePath+"/plugins").mkdir()
         Thread {
             /*
@@ -43,7 +57,15 @@ class MainActivity : AppCompatActivity() {
             initX5()
         }.start()
 
+    }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        startTest()
     }
 
     private fun initX5() {
@@ -66,11 +88,11 @@ class MainActivity : AppCompatActivity() {
         QbSdkManager.isInitOk = true
         runOnUiThread {
             findViewById<TbsReaderProxyView>(R.id.x5_trv).run {
-             //   openUrl("http://debugtbs.qq.com")
-               //open("sdcard/test.docx")
-//                open("sdcard/test.pdf")
+                //   openUrl("http://debugtbs.qq.com")
+                open("sdcard/test.docx")
+                // open("sdcard/test.pdf")
                 //open("sdcard/test/2.doc")
-                open(externalMediaDirs[0].absolutePath+"/test.pdf")
+                //     open(externalMediaDirs[0].absolutePath+"/test.pdf")
             }
         }
     }
