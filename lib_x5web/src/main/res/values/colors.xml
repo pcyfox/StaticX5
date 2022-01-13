@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="x5_textColorPrimary">#444444</color>
+
+    <color name="x5_textColorBlue">#3A8DFF</color>
+    <color name="x5_divider_color">#41999999</color>
+    <color name="x5_red_text_color">#ED3131</color>
+    <color name="x5_white">#FFFFFF</color>
+</resources>

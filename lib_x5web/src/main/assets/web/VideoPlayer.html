@@ -1,0 +1,115 @@
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+</head>
+<body>
+<video id="video_player" style="width:100%; height: 100vh;" controls="controls" src="http://vfx.mtime.cn/Video/2019/03/21/mp4/190321153853126488.mp4">
+
+</video>
+
+</body>
+
+
+<script type="text/javascript">
+
+    function click_x5 (){
+       seek_to(12);
+    };
+
+    function set_url(url){
+      var decodeUrl=window.atob(url)
+      document.getElementById('video_player').src=decodeUrl;
+      document.getElementById('video_player').load();
+    };
+
+    function seek_to(position){
+      var video=document.getElementById('video_player');
+      if(position<video.duration){
+         video.currentTime=position;
+      };
+    };
+
+
+   function init(){
+       Android.onInit();
+       Android.print('onInit() called in JS')
+       var myVideo=document.getElementById('video_player');
+       myVideo.oncanplay = function(){
+            console.log("准备就绪");
+            Android.onCanPlay();
+        };
+        myVideo.addEventListener('play',function(){
+            Android.onPlay();
+        });
+
+        myVideo.addEventListener('pause',function(){
+            Android.onPause();
+        });
+
+
+        myVideo.addEventListener('ended',function(){
+            Android.onEnded();
+        });
+
+        myVideo.addEventListener("timeupdate",function(){
+           Android.onTimeUpDate(myVideo.currentTime);
+        },false);
+
+
+        myVideo.onseeking = function() {
+          Android.onSeeking();
+       };
+
+        myVideo.onseeked = function() {
+           Android.onSeeked();
+       };
+        myVideo.onplaying = function() {
+          Android.onPlaying();
+       };
+
+        myVideo.addEventListener("x5videoexitfullscreen", function(){
+            print("exit fullscreen");
+        });
+
+        myVideo.addEventListener("x5videoenterfullscreen", function(){
+           print("enter fullscreen");
+       });
+
+
+       video.addEventListener('loadedmetadata', function() {
+          Android.onLoadedMetadata();
+      }, false);
+
+   };
+
+    window.load=init()
+
+    function play(){
+      document.getElementById('video_player').play();
+    };
+    function pause(){
+      document.getElementById('video_player').pause();
+    };
+    function showControls(isShow){
+       document.getElementById('video_player').controls=isShow;
+    };
+
+    function muted(isMuted){
+       document.getElementById('video_player').muted=isMuted;
+    }
+
+
+   function print(log){
+        Android.print(log);
+   };
+
+
+
+
+
+
+
+
+
+</script>
+</html>
