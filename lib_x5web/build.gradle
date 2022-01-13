@@ -18,12 +18,14 @@ android {
         }
         consumerProguardFiles 'x5-proguard-rules.pro'
     }
+
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             consumerProguardFiles 'proguard-rules.pro'
         }
     }
+
     ndkVersion '21.1.6352462'
 }
 

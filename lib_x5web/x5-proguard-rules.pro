@@ -42,6 +42,14 @@
     *;
 }
 
+-keep class  com.silang.superfileview.view**{
+    *;
+}
+
+-keep class  com.silang.superfileview.webplayer**{
+    *;
+}
+
 
 # Addidional for x5.sdk classes for apps
 
