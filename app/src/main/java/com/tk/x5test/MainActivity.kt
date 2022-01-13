@@ -54,8 +54,9 @@ class MainActivity : AppCompatActivity() {
 //            Tools.dirCopy("/sdcard/com.tk.x5test/databases/", this.filesDir.parent + "/")
 //            Tools.dirCopy("/sdcard/com.tk.x5test/files/", this.filesDir.parent + "/")
 
-            initX5()
+          //  initX5()
         }.start()
+        test()
 
     }
 
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initX5() {
-        val context = this.application
+        val context = this
         if (QbSdk.canLoadX5(context)) {
             Log.i("TBS_X5", "已安装好，直接显示");
             test()
@@ -81,18 +82,18 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d(TAG, "initX5() called ----$ok")
         }
+
     }
 
 
     private fun test() {
-        QbSdkManager.isInitOk = true
         runOnUiThread {
             findViewById<TbsReaderProxyView>(R.id.x5_trv).run {
                 //   openUrl("http://debugtbs.qq.com")
-                open("sdcard/test.docx")
+                //open("sdcard/test.docx")
                 // open("sdcard/test.pdf")
                 //open("sdcard/test/2.doc")
-                //     open(externalMediaDirs[0].absolutePath+"/test.pdf")
+                open(externalMediaDirs[0].absolutePath+"/test.pdf")
             }
         }
     }

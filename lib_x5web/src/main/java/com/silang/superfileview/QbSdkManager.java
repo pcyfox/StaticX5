@@ -5,6 +5,7 @@ package com.silang.superfileview;
  */
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -23,12 +24,15 @@ public final class QbSdkManager {
     private QbSdkManager() {
     }
 
-    public  static boolean isInitOk = false;
+    private static boolean isInitOk = false;
 
     public static boolean isIsInitOk() {
         return isInitOk;
     }
 
+    public static void setIsInitOk(boolean isInitOk) {
+        QbSdkManager.isInitOk = isInitOk;
+    }
 
     private static int initFailCount = 0;
 
@@ -44,30 +48,44 @@ public final class QbSdkManager {
 //        map.put(TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE, true);
 //        QbSdk.initTbsSettings(map);
 
-        QbSdk.initX5Environment(context.getApplicationContext(), new QbSdk.PreInitCallback() {
-            @Override
-            public void onViewInitFinished(boolean arg0) {
-                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
-                isInitOk = arg0;
-                if (arg0) {
-                    initFailCount = 0;
-                    XLog.i(TAG + " TBS  QbSdk.initX5Environment() onViewInitFinished  success");
-                } else {
-                    initFailCount++;
-                    XLog.e(TAG + "TBS  QbSdk.initX5Environment onViewInitFinished  fail");
-                }
-                if (cb != null) {
-                    cb.onViewInitFinished(arg0);
-                }
-            }
+//        QbSdk.initX5Environment(context.getApplicationContext(), new QbSdk.PreInitCallback() {
+//            @Override
+//            public void onViewInitFinished(boolean arg0) {
+//                //x5內核初始化完成的回调，为true表示x5内核加载成功，否则表示x5内核加载失败，会自动切换到系统内核。
+//                isInitOk = arg0;
+//                if (arg0) {
+//                    initFailCount = 0;
+//                    XLog.i(TAG + " TBS  QbSdk.initX5Environment() onViewInitFinished  success");
+//                } else {
+//                    initFailCount++;
+//                    XLog.e(TAG + "TBS  QbSdk.initX5Environment onViewInitFinished  fail");
+//                }
+//                if (cb != null) {
+//                    cb.onViewInitFinished(arg0);
+//                }
+//            }
+//
+//            @Override
+//            public void onCoreInitFinished() {
+//                if (cb != null) {
+//                    cb.onCoreInitFinished();
+//                }
+//            }
+//        });
 
-            @Override
-            public void onCoreInitFinished() {
-                if (cb != null) {
-                    cb.onCoreInitFinished();
-                }
-            }
-        });
+        if (QbSdk.canLoadX5(context)) {
+            Log.i("TBS_X5", "已安装好");
+            isInitOk = true;
+        } else {
+            Log.i("TBS_X5", "新安装");
+            isInitOk = QbSdk.preinstallStaticTbs(context);
+            Log.i(TAG, "initX5() init result---->" + isInitOk);
+        }
+
+        if (cb != null) {
+            cb.onCoreInitFinished();
+            cb.onViewInitFinished(isInitOk);
+        }
     }
 
     public static void clear(Context context) {
