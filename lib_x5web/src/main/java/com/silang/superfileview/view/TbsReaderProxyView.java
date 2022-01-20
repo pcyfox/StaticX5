@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -256,11 +257,9 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
 
     public void openVideoUrl(final String url) {
         Log.d(TAG, "openVideoUrl() called with: url = [" + url + "]");
-/*
         String data = "<HTML><VIDEO style=\"width:100%; height: 100%;\" src=\"" + url + "\" controls=\"controls\"" + "/>";
         loadTextHtml(url, data);
-*/
-     /*   if (webView == null) {
+     if (webView == null) {
             loadXWebView();
             webView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
                 @Override
@@ -280,7 +279,7 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
         webVideoPlayManager.load(url);
         if (mTbsReaderView != null) {
             mTbsReaderView.setVisibility(View.GONE);
-        }*/
+        }
 
 
     }
