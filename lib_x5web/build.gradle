@@ -39,4 +39,6 @@ dependencies {
     implementation rootDependencies.gson
     implementation rootDependencies.constraintlayout
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //implementation project(path: ':lib_video_cache')
+    //implementation project(path: ':lib_video')
 }

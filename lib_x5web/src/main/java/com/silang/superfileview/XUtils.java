@@ -92,7 +92,7 @@ public final class XUtils {
         if (url.toLowerCase().endsWith("pptx")) return fileImg[8];
         if (url.toLowerCase().endsWith("txt")) return fileImg[9];
         if (url.toLowerCase().endsWith("xsl")) return fileImg[10];
-        if (url.toLowerCase().endsWith("xslx")) return fileImg[11];
+        if (url.toLowerCase().endsWith("xlsx")) return fileImg[11];
         if (url.toLowerCase().endsWith("mp4")) return fileImg[13];
         if (url.toLowerCase().endsWith("flv")) return fileImg[13];
         if (url.toLowerCase().endsWith("avi")) return fileImg[13];
