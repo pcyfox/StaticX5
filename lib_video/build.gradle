@@ -1,0 +1,50 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+
+def rootDependencies = rootProject.ext.dependencies
+android {
+    compileSdkVersion project.compileSdkVersion
+    defaultConfig {
+        minSdkVersion project.minSdkVersion
+        targetSdkVersion project.androidTargetSdk
+
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'video-proguard-rules.pro'
+
+        ndk {
+            abiFilters 'armeabi-v7a'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api'com.shuyu:gsyVideoPlayer-java:7.1.6'
+    api 'com.shuyu:gsyVideoPlayer-ex_so:7.1.6'
+
+    //是否需要ExoPlayer模式
+    api 'com.shuyu:GSYVideoPlayer-exo2:7.1.6'
+
+    implementation(rootDependencies.glide) {
+        exclude group: 'com.android.support'
+    }
+    implementation rootDependencies.appcompat
+    implementation rootDependencies.ktx
+    implementation rootDependencies.annotation
+    implementation rootDependencies.constraintlayout
+}

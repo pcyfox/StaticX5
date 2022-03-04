@@ -1,17 +1,14 @@
 package com.tk.x5test
 
-import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Bundle
-import android.os.FileUtils
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.silang.superfileview.QbSdkManager
 import com.silang.superfileview.view.TbsReaderProxyView
 import com.tencent.smtt.sdk.QbSdk
-import java.io.*
 
 class MainActivity : AppCompatActivity() {
     private val TAG = "TBS_X5"
