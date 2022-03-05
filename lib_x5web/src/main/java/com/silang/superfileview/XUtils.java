@@ -43,6 +43,13 @@ public final class XUtils {
             R.drawable.x5_file_video
     };
 
+    public static boolean isHttpURL(String str) {
+        String regex = "^((https|http|)?://)";
+        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = p.matcher(str);
+        return matcher.find();
+    }
+
     public static boolean isDoc(String url) {
         String[] types = {"doc", "docx", "pdf", "ppt", "pptx", "xsl", "xlsx"};
         return isInTypes(url, types);
@@ -52,8 +59,34 @@ public final class XUtils {
         return isInTypes(url, avs);
     }
 
-    public static boolean isImg(String url) {
+    public static boolean isWebImg(String url) {
         return isInTypes(url, imgs);
+    }
+
+
+    /***
+     * 获取文件类型
+     *
+     * @param paramString
+     * @return
+     */
+    public  static String getFileType(String paramString) {
+        String str = "";
+
+        if (TextUtils.isEmpty(paramString)) {
+            return str;
+        }
+        int i = paramString.lastIndexOf('.');
+        if (i <= -1) {
+            return str;
+        }
+
+        str = paramString.substring(i + 1);
+        return str;
+    }
+
+    public static boolean isLocalImg(String url) {
+        return new File(url).exists() && isInTypes(url, imgs);
     }
 
     public static boolean isInTypes(String url, String[] types) {
@@ -174,17 +207,17 @@ public final class XUtils {
 
     public static boolean isSupportFile(File file) {
         String type = XUtils.getFileExtension(file.getName());
-        return  true;
+        return true;
     }
 
     public static boolean isTbModeFile(File file) {
         String type = XUtils.getFileExtension(file.getName());
-        return  true;
+        return true;
     }
 
     public static boolean isQBModeFile(File file) {
         String type = XUtils.getFileExtension(file.getName());
-        return  true;
+        return true;
     }
 
 
@@ -196,13 +229,6 @@ public final class XUtils {
         if (parent == null) return false;
         Log.d("isSubRootPath", "isSubRootPath() called with: parent = [" + parent.getAbsolutePath() + "]");
         return parent.getParent() == null;
-    }
-
-    public static boolean isURL(String str) {
-        String regex = "^((https|http|ftp|rtsp|mms)?://)";
-        Pattern p = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
-        Matcher matcher = p.matcher(str);
-        return matcher.find();
     }
 
 

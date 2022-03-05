@@ -46,7 +46,7 @@ public class X5WebView extends WebView {
              * 防止加载网页时调起系统浏览器
              */
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (XUtils.isURL(url)) {
+                if (XUtils.isHttpURL(url)) {
                     Log.d(TAG, "shouldOverrideUrlLoading() called with: view = [" + view + "], url = [" + url + "]");
                     view.loadUrl(url);
                     if (webPageLoadListener != null) {

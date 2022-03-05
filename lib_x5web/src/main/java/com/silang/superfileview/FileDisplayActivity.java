@@ -48,15 +48,15 @@ public class FileDisplayActivity extends FragmentActivity implements View.OnClic
         if (!TextUtils.isEmpty(path)) {
             setFilePath(path);
         }
-        readerViewProxy.setOnGetFilePathListener(mSuperFileView2 -> mSuperFileView2.displayDocFile(new File(getFilePath())));
-        readerViewProxy.show();
+//        readerViewProxy.setOnGetFilePathListener(mSuperFileView2 -> mSuperFileView2.displayDocFile(new File(getFilePath())));
+//        readerViewProxy.show();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         if (readerViewProxy != null) {
-            readerViewProxy.stopDisplay();
+            readerViewProxy.resume();
         }
     }
 
