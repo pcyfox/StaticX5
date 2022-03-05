@@ -14,7 +14,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         //X5兼容64位手机
         ndk {
-            abiFilters"armeabi", "armeabi-v7a"
+            abiFilters "armeabi-v7a"
         }
         consumerProguardFiles 'x5-proguard-rules.pro'
     }

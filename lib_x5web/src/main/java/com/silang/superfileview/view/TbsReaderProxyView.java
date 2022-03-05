@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.elvishew.xlog.XLog;
+import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer;
 import com.silang.superfileview.QbSdkManager;
 import com.silang.superfileview.XUtils;
 import com.tencent.smtt.export.external.interfaces.JsResult;
@@ -32,14 +33,15 @@ import java.io.File;
 public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.ReaderCallback {
     private static final String TAG = "TbsReaderProxyView";
     private TbsReaderView mTbsReaderView;
-    private final Context context;
     private X5WebView webView;
+    private final MultiSampleVideo player;
+
+    private final Context context;
     // "http://soft.imtt.qq.com/browser/tes/feedback.html",
     // "http://debugtbs.qq.com/",
     private boolean isStop = false;
     private OnLoadListener onLoadListener;
     private String currentFileOrUrl = "";
-    private final MultiSampleVideo player;
     private boolean isWebViewTouchable = true;
 
     public TbsReaderProxyView(Context context) {
@@ -108,6 +110,30 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
     }
 
 
+    private void showCurrentView(View v) {
+        for (int i = 0; i < getChildCount(); i++) {
+            View child = getChildAt(i);
+            if (child != v) {
+                child.setVisibility(View.GONE);
+                if (child instanceof GSYVideoPlayer) {
+                    pauseVideo();
+                } else if (child instanceof WebView) {
+                    webView.stopLoading();
+                    String data = "</Div><head><style></head>";
+                    loadTextHtml("", data);
+                }
+            }
+        }
+
+        if (onLoadListener != null && !TextUtils.isEmpty(currentFileOrUrl)) {
+            onLoadListener.onLoadStop(currentFileOrUrl);
+        }
+        isStop = true;
+        if (v != null) {
+            v.setVisibility(View.VISIBLE);
+        }
+    }
+
     private TbsReaderView getTbsReaderView(Context context) {
         return new TbsReaderView(context, this);
     }
@@ -134,10 +160,11 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
         }
         Log.d(TAG, "displayDocFile() called with: path = [" + path + "]");
         if (TextUtils.isEmpty(path) || !new File(path).exists() || !new File(path).canRead()) {
-            Log.e(TAG, "文件路径为空,或无法访问!");
+            Log.e(TAG, "无法访问文件!");
             return new OpenResult(false, "文件访问失败！");
         }
-        stopDisplay();
+        showCurrentView(mTbsReaderView);
+
         currentFileOrUrl = path;
         if (onLoadListener != null && !TextUtils.isEmpty(path)) {
             onLoadListener.onLoadStart(path);
@@ -150,8 +177,6 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
             loadReaderView();
         }
 
-        player.onVideoPause();
-        webView.setVisibility(View.GONE);
 
         //增加下面一句解决没有TbsReaderTemp文件夹存在导致加载文件失败
         String bsReaderTemp = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "TbsReaderTemp";
@@ -189,45 +214,38 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
      * @param url
      */
     public void openUrl(String url) {
+        if (TextUtils.isEmpty(url)) {
+            return;
+        }
+        showCurrentView(webView);
         currentFileOrUrl = url;
         if (onLoadListener != null) {
             onLoadListener.onLoadStart(url);
         }
-        if (TextUtils.isEmpty(url)) {
-            return;
-        }
-
-        if (mTbsReaderView != null) {
-            mTbsReaderView.setVisibility(View.GONE);
-        }
         if (webView == null) {
             loadXWebView();
         }
-        webView.setVisibility(View.VISIBLE);
-        // webView.setBackgroundColor(Color.RED);
-        webView.stopLoading();
         webView.loadUrl(url);
         Log.d(TAG, "displayUrl() called with: url = [" + url + "]");
     }
 
     public void openLocalImage(String path) {
+        showCurrentView(webView);
+        if (TextUtils.isEmpty(path)) {
+            return;
+        }
         currentFileOrUrl = path;
         if (onLoadListener != null) {
             onLoadListener.onLoadStart(path);
-        }
-        if (TextUtils.isEmpty(path)) {
-            return;
         }
         Log.d(TAG, "openImage() called with: url = [" + path + "]");
 
         if (webView == null) {
             loadXWebView();
-
         }
         if (mTbsReaderView != null) {
             mTbsReaderView.setVisibility(View.GONE);
         }
-        webView.setVisibility(View.VISIBLE);
 
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         String imageUrl = "file://" + path;
@@ -241,6 +259,10 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
 
 
     public void openImageUrl(String url) {
+        showCurrentView(webView);
+        if (onLoadListener != null) {
+            onLoadListener.onLoadStart(url);
+        }
         String data = "<HTML><IMG src=\"" + url + "\"" + "/>";
         loadTextHtml(url, data);
         if (onLoadListener != null) {
@@ -254,9 +276,7 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
     }
 
     public void openVideoUrl(final String url, boolean useCache) {
-        if (mTbsReaderView != null) {
-            mTbsReaderView.setVisibility(View.GONE);
-        }
+        showCurrentView(player);
         player.setVisibility(View.VISIBLE);
         player.setUp(url, useCache, "");
         player.startPlayLogic();
@@ -264,7 +284,13 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
 
 
     public void pauseVideo() {
-        player.onVideoPause();
+        if (player != null) {
+            player.onVideoPause();
+        }
+    }
+
+    public void resumeVideo() {
+        player.onVideoResume();
     }
 
     public MultiSampleVideo getPlayer() {
@@ -379,31 +405,7 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
     }
 
     public void stopDisplay() {
-        Log.e(TAG, "onStopDisplay() called");
-        if (mTbsReaderView != null) {
-            mTbsReaderView.setVisibility(View.INVISIBLE);
-        }
-        if (webView != null) {
-            player.onVideoPause();
-            webView.setVisibility(View.INVISIBLE);
-        }
-        if (onLoadListener != null && !TextUtils.isEmpty(currentFileOrUrl)) {
-            onLoadListener.onLoadStop(currentFileOrUrl);
-        }
-        isStop = true;
-    }
-
-
-    public void pauseDisplay() {
-        Log.d(TAG, "onStopDisplay() called");
-        if (player != null) {
-            player.onVideoPause();
-        }
-        pauseVideo();
-        if (onLoadListener != null) {
-            onLoadListener.onLoadStop(currentFileOrUrl);
-        }
-        isStop = true;
+        showCurrentView(null);
     }
 
 
@@ -439,7 +441,7 @@ public class TbsReaderProxyView extends FrameLayout implements TbsReaderView.Rea
     }
 
     public void onPause() {
-        pauseDisplay();
+        stopDisplay();
     }
 
     public void hideVideoView() {
