@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                 // open("sdcard/test.pdf")
                 //open("sdcard/test/2.doc")
                 //open(externalMediaDirs[0].absolutePath+"/test.pdf")
-                openVideoUrl("http://taike-cloud-teacher.oss-cn-zhangjiakou.aliyuncs.com/dff4e872edfc45c4835a39b9bc48db7f28a9f2b031a14a3bbf09d681e91ee051.mp4?Expires=1642663537&OSSAccessKeyId=LTAI4GHqcG8nmuVTmYivDME3&Signature=D1pNeQuNtbmFxaiWOGQzCng7SPo%3D")
+               
             }
         }
     }
