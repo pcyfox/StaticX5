@@ -7,5 +7,10 @@
 ----
 2、静态插件集成尝试失败
 -----
-implementation 'com.github.pcyfox:StaticX5:v1.0.3'
+implementation 'com.github.pcyfox:StaticX5:v1.0.9'
+
+
+
+//video 分支（使用GSY Player替换视频播放实现）
+implementation 'com.github.pcyfox.StaticX5:lib_video:v1.0.11-v'
 ----
