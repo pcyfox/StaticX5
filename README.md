@@ -1,7 +1,7 @@
 # StaticX5
 ##腾讯X5内核静态加载方案
 ----
-#tip：Android7.0 后需要配置FileContentProvider才能访问外部存储文件
+#tip：Android7.0 后需要配置FileContentProvider才能访问外部存储文件,否则会出现文件打开失败的问题
 
 1、静态内核集成已完成测试
 ----
